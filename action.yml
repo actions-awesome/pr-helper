@@ -1,4 +1,4 @@
-name: 'PRs Helper'
+name: 'PRs Review Helper'
 description: 'Get PRs automated'
 inputs:
   actions:
@@ -27,4 +27,7 @@ inputs:
 runs:
   using: node12
   main: 'dist/main.js'
+branding:
+  icon: 'users'
+  color: 'green'
 

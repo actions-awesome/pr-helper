@@ -12,8 +12,7 @@ export const log = (msg: string) => {
   info(`${NAME}: ${msg}`)
 }
 
-export const toList = (str: string) =>
-  str.split(delimiter).map(String.prototype.trim)
+export const toList = (str: string) => str.split(delimiter).map((s) => s.trim())
 
 export const createHelperError = (msg: string) => {
   throw new PrHelperError(msg)

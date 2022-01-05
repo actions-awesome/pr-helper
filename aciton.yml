@@ -1,0 +1,30 @@
+name: 'PRs Helper'
+description: 'Get PRs automated'
+inputs:
+  actions:
+    description: 'The actions to perform, default separated by comma'
+    required: true
+  token:
+    description: 'The token of Github'
+    default: ${{ github.token }}
+  pr-number:
+    description: 'The number of PR to be operated on'
+    default: ${{ github.event.number}}
+  repo:
+    description: 'Repository name'
+  body:
+    description: 'Comment body to post'
+  labels:
+    description: 'Labels to add, default separated by comma'
+  reviewers:
+    description: 'Reviewers id to add, default separated by comma'
+  assignees:
+    description: 'Assignees id to add, default separated by comma'
+  suggested-reviewers:
+    description: 'Suggested reviewers id to add, default separated by comma'
+  delimiter:
+    description: 'The delimiter to split the all multi valued inputs'
+runs:
+  using: node12
+  main: 'dist/main.js'
+

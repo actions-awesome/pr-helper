@@ -2,7 +2,7 @@ import { getInput, setOutput } from '@actions/core'
 import delimiter from './delimiter'
 import { ACTIONS } from './constants'
 import { actions } from './actions'
-import { log, PrHelperError } from './utils'
+import { log, createHelperError } from './utils'
 
 log('Started')
 
@@ -18,7 +18,7 @@ async function main() {
       await dispatchAction(action)
     } catch (e) {
       setOutput(action, false)
-      throw new PrHelperError((e as Error).message)
+      throw e
     }
   }
 }
@@ -26,7 +26,7 @@ async function main() {
 async function dispatchAction(name: string) {
   const actionHandler = actions[name]
   if (actionHandler) return actionHandler()
-  return Promise.reject(`Action name: ${name} is not supported,
+  createHelperError(`Action name: ${name} is not supported,
   please refer to the document.
   `)
 }

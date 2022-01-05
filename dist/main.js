@@ -86311,7 +86311,9 @@ var client = new Octokit({
 
 const addAssignees = () => __awaiter$1(void 0, void 0, void 0, function* () {
     const rawAssignees = core.getInput(ASSIGNEES);
+    log(`assignees string: ${rawAssignees}`);
     const assignees = toList(rawAssignees);
+    log(`assignees list: ${rawAssignees}`);
     assertListNotEmpty('Assignees', assignees);
     const { repo, pr, owner } = meta;
     return client.issues.addAssignees({
@@ -86350,7 +86352,7 @@ function main() {
             }
             catch (e) {
                 core.setOutput(action, false);
-                throw new PrHelperError(e.message);
+                throw e;
             }
         }
     });
@@ -86360,7 +86362,7 @@ function dispatchAction(name) {
         const actionHandler = actions[name];
         if (actionHandler)
             return actionHandler();
-        return Promise.reject(`Action name: ${name} is not supported,
+        createHelperError(`Action name: ${name} is not supported,
   please refer to the document.
   `);
     });

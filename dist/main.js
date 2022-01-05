@@ -1592,7 +1592,7 @@ class PrHelperError extends Error {
 const log = (msg) => {
     core.info(`${NAME}: ${msg}`);
 };
-const toList = (str) => str.split(delimiter).map(String.prototype.trim);
+const toList = (str) => str.split(delimiter).map((s) => s.trim());
 const createHelperError = (msg) => {
     throw new PrHelperError(msg);
 };

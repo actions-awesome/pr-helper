@@ -1,5 +1,4 @@
 import { getInput, setOutput } from '@actions/core'
-import github from '@actions/github'
 import delimiter from './delimiter'
 import { ACTIONS } from './constants'
 import { actions } from './actions'

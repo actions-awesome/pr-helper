@@ -1,4 +1,4 @@
-name: 'PRs Helper'
+name: 'PRs Review Helper'
 description: 'Get PRs automated'
 inputs:
   actions:

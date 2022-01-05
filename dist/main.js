@@ -86313,15 +86313,15 @@ const addAssignees = () => __awaiter$1(void 0, void 0, void 0, function* () {
     const rawAssignees = core.getInput(ASSIGNEES);
     log(`assignees string: ${rawAssignees}`);
     const assignees = toList(rawAssignees);
-    log(`assignees list: ${rawAssignees}`);
     assertListNotEmpty('Assignees', assignees);
     const { repo, pr, owner } = meta;
-    return client.issues.addAssignees({
+    yield client.issues.addAssignees({
         repo,
         owner,
         issue_number: pr,
         assignees,
     });
+    log(`Assignees set to: ${rawAssignees}`);
 });
 
 const createActionWithHook = (name, action) => {

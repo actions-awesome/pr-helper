@@ -20,11 +20,7 @@ const createActionWithHook = (
   return async () => {
     log(`action name: ${name} started`)
     // Not catching it is intended because we want the error to be thrown.
-    try {
-      await handler()
-    } catch (e) {
-      log((e as Error).message)
-    }
+    await handler()
 
     log(`action name: ${name} dispatched successfully`)
     setOutput(name, true)

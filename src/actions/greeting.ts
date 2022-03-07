@@ -31,7 +31,7 @@ export const greetings = async () => {
 
   const { repo, owner } = meta
 
-  greetings
+  greetings = greetings
     .replace(/%repo%/g, repo)
     .replace(/%user%/g, `@${sender.login}`)
     .replace(/%guideline%/g, guidelineAddress)

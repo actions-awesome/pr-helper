@@ -86368,7 +86368,7 @@ const greetings = () => __awaiter$1(void 0, void 0, void 0, function* () {
     let guidelineAddress = core.getInput(GREETING_GUIDELINE_ADDRESS);
     log(`original greeting string: ${greetings}`);
     const { repo, owner } = meta;
-    greetings
+    greetings = greetings
         .replace(/%repo%/g, repo)
         .replace(/%user%/g, `@${sender.login}`)
         .replace(/%guideline%/g, guidelineAddress);
@@ -86392,12 +86392,7 @@ const createActionWithHook = (name, handler) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
         // Not catching it is intended because we want the error to be thrown.
-        try {
-            yield handler();
-        }
-        catch (e) {
-            log(e.message);
-        }
+        yield handler();
         log(`action name: ${name} dispatched successfully`);
         core.setOutput(name, true);
     });

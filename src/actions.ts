@@ -5,8 +5,9 @@ import {
   ADD_LABELS,
   ADD_REVIEWERS,
   CREATE_COMMENT,
+  GREETING,
 } from './constants'
-import { addAssignees, addReviewers } from './actions/index'
+import { addAssignees, addReviewers, greetings } from './actions/index'
 
 type ActionHandlers = {
   [key: string]: () => any
@@ -28,4 +29,5 @@ export const actions: ActionHandlers = {
   [ADD_LABELS]: () => {},
   [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
   [CREATE_COMMENT]: () => {},
+  [GREETING]: createActionWithHook(GREETING, greetings),
 }

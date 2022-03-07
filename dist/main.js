@@ -1573,12 +1573,15 @@ const ADD_ASSIGNEES = 'add-assignees';
 const ADD_LABELS = 'add-labels';
 const ADD_REVIEWERS = 'add-reviewers';
 const CREATE_COMMENT = 'create-comment';
+const GREETING = 'greeting';
 const PR_NUMBER = 'pr-number';
 // Variable constants
 const ASSIGNEES = 'assignees';
 const REVIEWERS = 'reviewers';
 const ACTIONS = 'actions';
 const DELIMITER = 'delimiter';
+const GREETING_MSG = 'greeting-message';
+const GREETING_GUIDELINE_ADDRESS = 'greeting-guideline-address';
 const REPO = 'repo';
 
 const defaultDelimiter = ',';
@@ -1605,10 +1608,10 @@ const assertListNotEmpty = (name, list) => {
 
 var github = {};
 
-var context$1 = {};
+var context$2 = {};
 
-Object.defineProperty(context$1, "__esModule", { value: true });
-context$1.Context = void 0;
+Object.defineProperty(context$2, "__esModule", { value: true });
+context$2.Context = void 0;
 const fs_1 = require$$0__default["default"];
 const os_1 = require$$1__default["default"];
 class Context$2 {
@@ -1658,7 +1661,7 @@ class Context$2 {
         throw new Error("context.repo requires a GITHUB_REPOSITORY environment variable like 'owner/repo'");
     }
 }
-context$1.Context = Context$2;
+context$2.Context = Context$2;
 
 var utils$2 = {};
 
@@ -86174,7 +86177,7 @@ var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function
 };
 Object.defineProperty(utils$2, "__esModule", { value: true });
 utils$2.getOctokitOptions = utils$2.GitHub = utils$2.context = void 0;
-const Context$1 = __importStar$1(context$1);
+const Context$1 = __importStar$1(context$2);
 const Utils = __importStar$1(utils$1);
 // octokit + plugins
 const core_1 = require$$2;
@@ -86226,10 +86229,10 @@ var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (
     return result;
 };
 Object.defineProperty(github, "__esModule", { value: true });
-github.getOctokit = context = github.context = void 0;
-const Context = __importStar(context$1);
+github.getOctokit = context$1 = github.context = void 0;
+const Context = __importStar(context$2);
 const utils_1 = utils$2;
-var context = github.context = new Context.Context();
+var context$1 = github.context = new Context.Context();
 /**
  * Returns a hydrated octokit ready to use for GitHub Actions
  *
@@ -86245,11 +86248,11 @@ function getMeta() {
     var _a;
     let owner;
     let repo;
-    let pr = context.issue.number;
+    let pr = context$1.issue.number;
     const userInputRepo = core.getInput(REPO);
-    const isPullRequest = context.eventName === 'pull_request' ||
-        (!!((_a = context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) &&
-            context.eventName === 'issue_commented');
+    const isPullRequest = context$1.eventName === 'pull_request' ||
+        (!!((_a = context$1.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) &&
+            context$1.eventName === 'issue_commented');
     if (isPullRequest) {
         /**
          * according to the source code, the context.issue.number will always be pointed to the correct one.
@@ -86269,7 +86272,7 @@ function getMeta() {
         };
     }
     else {
-        return Object.assign(Object.assign({}, context.repo), { pr });
+        return Object.assign(Object.assign({}, context$1.repo), { pr });
     }
 }
 var meta = getMeta();
@@ -86340,6 +86343,52 @@ const addReviewers = () => __awaiter$1(void 0, void 0, void 0, function* () {
     log(`Reviewers set to: ${rawReviewers}`);
 });
 
+var context = github.context;
+
+/**
+ * Greetings to user who opens an issue or a PR.
+ * Basic usage:
+ *
+ *  with:
+ *   actions: add-assignees, add-reviewers
+ *   assignees: JeremyWuuuuu
+ *   greeting-message: Hello %user%, thank you for contributing to %repo%, please follow the %guideline% to see how to contribute to %repo%
+ * @returns void
+ */
+const greetings = () => __awaiter$1(void 0, void 0, void 0, function* () {
+    if (context.payload.action !== 'opened') {
+        log(`early termination for existed PR`);
+        return;
+    }
+    const { sender } = context.payload;
+    if (!sender) {
+        core.setFailed('No valid sender presented');
+        return;
+    }
+    let greetings = core.getInput(GREETING_MSG);
+    let guidelineAddress = core.getInput(GREETING_GUIDELINE_ADDRESS);
+    log(`original greeting string: ${greetings}`);
+    const { repo, owner } = meta;
+    greetings
+        .replace(/%repo%/g, repo)
+        .replace(/%user%/g, `@${sender.login}`)
+        .replace(/%guideline%/g, guidelineAddress);
+    try {
+        yield client.issues.createComment({
+            owner,
+            repo,
+            issue_number: context.issue.number,
+            body: greetings,
+        });
+    }
+    catch (e) {
+        const msg = e.message;
+        log(`Greeting error: ${msg}`);
+        core.setFailed(msg);
+    }
+    log(`Greeting set to: ${greetings}`);
+});
+
 const createActionWithHook = (name, action) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
@@ -86354,6 +86403,7 @@ const actions = {
     [ADD_LABELS]: () => { },
     [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
     [CREATE_COMMENT]: () => { },
+    [GREETING]: createActionWithHook(GREETING, greetings),
 };
 
 log('Started');

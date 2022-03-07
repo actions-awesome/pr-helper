@@ -38,6 +38,3 @@ export const actions: ActionHandlers = {
   // [CREATE_COMMENT]: () => {},
   [GREETING]: createActionWithHook(GREETING, greetings),
 }
-
-console.log(actions)
-console.log(createActionWithHook(ADD_REVIEWERS, addReviewers))

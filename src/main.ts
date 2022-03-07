@@ -8,7 +8,7 @@ log('Started')
 
 const action = getInput(ACTIONS, { required: true })
 
-const actionList = action.split(delimiter)
+const actionList = action.split(delimiter).map(String.prototype.trim)
 
 log('actions to be executed: ', actionList)
 
@@ -34,7 +34,6 @@ async function main() {
 async function dispatchAction(name: string) {
   const actionHandler = actions[name]
   log(name)
-  console.log(actionHandler)
   if (!actionHandler) {
     createHelperError(`Action name: ${name} is not supported,
   please refer to the documentation.`)

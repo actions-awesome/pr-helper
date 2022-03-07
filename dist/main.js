@@ -86409,12 +86409,10 @@ const actions = {
     // [CREATE_COMMENT]: () => {},
     [GREETING]: createActionWithHook(GREETING, greetings),
 };
-console.log(actions);
-console.log(createActionWithHook(ADD_REVIEWERS, addReviewers));
 
 log('Started');
 const action = core.getInput(ACTIONS, { required: true });
-const actionList = action.split(delimiter);
+const actionList = action.split(delimiter).map(String.prototype.trim);
 log('actions to be executed: ', actionList);
 main();
 function main() {
@@ -86439,7 +86437,6 @@ function dispatchAction(name) {
     return __awaiter$1(this, void 0, void 0, function* () {
         const actionHandler = actions[name];
         log(name);
-        console.log(actionHandler);
         if (!actionHandler) {
             createHelperError(`Action name: ${name} is not supported,
   please refer to the documentation.`);

@@ -6,7 +6,7 @@ import {
   ADD_REVIEWERS,
   CREATE_COMMENT,
 } from './constants'
-import { addAssignees } from './actions/index'
+import { addAssignees, addReviewers } from './actions/index'
 
 type ActionHandlers = {
   [key: string]: () => any
@@ -26,6 +26,6 @@ const createActionWithHook = (name: string, action: ActionHandlers[string]) => {
 export const actions: ActionHandlers = {
   [ADD_ASSIGNEES]: createActionWithHook(ADD_REVIEWERS, addAssignees),
   [ADD_LABELS]: () => {},
-  [ADD_REVIEWERS]: () => {},
+  [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
   [CREATE_COMMENT]: () => {},
 }

@@ -6,7 +6,7 @@ import client from './client'
 
 export const addAssignees = async () => {
   const rawAssignees = getInput(ASSIGNEES)
-  log(`assignees string: ${rawAssignees}`)
+  log(`Assignees string: ${rawAssignees}`)
   const assignees = toList(rawAssignees)
   assertListNotEmpty('Assignees', assignees)
   const { repo, pr, owner } = meta

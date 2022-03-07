@@ -86412,7 +86412,7 @@ const actions = {
 
 log('Started');
 const action = core.getInput(ACTIONS, { required: true });
-const actionList = action.split(delimiter).map(String.prototype.trim);
+const actionList = action.split(delimiter).map((v) => v.trim());
 log('actions to be executed: ', actionList);
 main();
 function main() {

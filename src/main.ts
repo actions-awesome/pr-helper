@@ -10,16 +10,18 @@ const action = getInput(ACTIONS, { required: true })
 
 const actionList = action.split(delimiter)
 
+log('actions to be executed: ', actionList)
+
 main()
 
 async function main() {
   try {
     await Promise.all(
-      actionList.map(async (action) => {
+      actionList.map(async (actionName) => {
         try {
-          await dispatchAction(action)
+          await dispatchAction(actionName)
         } catch (e) {
-          setOutput(action, false)
+          setOutput(actionName, false)
           throw e
         }
       })

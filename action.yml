@@ -6,7 +6,7 @@ inputs:
     required: true
   greeting-message:
     description: 'The message to show to the issue or PR author'
-  greeting-guideline-message:
+  greeting-guideline-address:
     description: 'The link to the guideline documentation, e.g.: https://docs.github.com/en'
   token:
     description: 'The token of Github'

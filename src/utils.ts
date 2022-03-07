@@ -8,8 +8,9 @@ export class PrHelperError extends Error {
   }
 }
 
-export const log = (msg: string) => {
-  info(`${NAME}: ${msg}`)
+export const log = (msg: string, ...args: any[]) => {
+  info(`${NAME}: ${msg}
+${args.join('\n')}`)
 }
 
 export const toList = (str: string) => str.split(delimiter).map((s) => s.trim())

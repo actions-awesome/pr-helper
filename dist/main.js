@@ -1591,8 +1591,9 @@ class PrHelperError extends Error {
         super(`${NAME} Error: ${message}`);
     }
 }
-const log = (msg) => {
-    core.info(`${NAME}: ${msg}`);
+const log = (msg, ...args) => {
+    core.info(`${NAME}: ${msg}
+${args.join('\n')}`);
 };
 const toList = (str) => str.split(delimiter).map((s) => s.trim());
 const createHelperError = (msg) => {
@@ -86407,16 +86408,17 @@ const actions = {
 log('Started');
 const action = core.getInput(ACTIONS, { required: true });
 const actionList = action.split(delimiter);
+log('actions to be executed: ', actionList);
 main();
 function main() {
     return __awaiter$1(this, void 0, void 0, function* () {
         try {
-            yield Promise.all(actionList.map((action) => __awaiter$1(this, void 0, void 0, function* () {
+            yield Promise.all(actionList.map((actionName) => __awaiter$1(this, void 0, void 0, function* () {
                 try {
-                    yield dispatchAction(action);
+                    yield dispatchAction(actionName);
                 }
                 catch (e) {
-                    core.setOutput(action, false);
+                    core.setOutput(actionName, false);
                     throw e;
                 }
             })));

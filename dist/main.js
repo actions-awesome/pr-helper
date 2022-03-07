@@ -86412,14 +86412,19 @@ const actionList = action.split(delimiter);
 main();
 function main() {
     return __awaiter$1(this, void 0, void 0, function* () {
-        for (const action of actionList) {
-            try {
-                yield dispatchAction(action);
-            }
-            catch (e) {
-                core.setOutput(action, false);
-                throw e;
-            }
+        try {
+            yield Promise.all(actionList.map((action) => __awaiter$1(this, void 0, void 0, function* () {
+                try {
+                    yield dispatchAction(action);
+                }
+                catch (e) {
+                    core.setOutput(action, false);
+                    throw e;
+                }
+            })));
+        }
+        catch (e) {
+            log(e.message);
         }
     });
 }
@@ -86429,7 +86434,6 @@ function dispatchAction(name) {
         if (actionHandler)
             return actionHandler();
         createHelperError(`Action name: ${name} is not supported,
-  please refer to the document.
-  `);
+please refer to the documentation.`);
     });
 }

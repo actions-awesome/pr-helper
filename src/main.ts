@@ -13,13 +13,19 @@ const actionList = action.split(delimiter)
 main()
 
 async function main() {
-  for (const action of actionList) {
-    try {
-      await dispatchAction(action)
-    } catch (e) {
-      setOutput(action, false)
-      throw e
-    }
+  try {
+    await Promise.all(
+      actionList.map(async (action) => {
+        try {
+          await dispatchAction(action)
+        } catch (e) {
+          setOutput(action, false)
+          throw e
+        }
+      })
+    )
+  } catch (e) {
+    log((e as Error).message)
   }
 }
 
@@ -27,6 +33,5 @@ async function dispatchAction(name: string) {
   const actionHandler = actions[name]
   if (actionHandler) return actionHandler()
   createHelperError(`Action name: ${name} is not supported,
-  please refer to the document.
-  `)
+please refer to the documentation.`)
 }

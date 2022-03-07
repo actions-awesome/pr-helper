@@ -86311,7 +86311,7 @@ var client = new Octokit({
 
 const addAssignees = () => __awaiter$1(void 0, void 0, void 0, function* () {
     const rawAssignees = core.getInput(ASSIGNEES);
-    log(`assignees string: ${rawAssignees}`);
+    log(`Assignees string: ${rawAssignees}`);
     const assignees = toList(rawAssignees);
     assertListNotEmpty('Assignees', assignees);
     const { repo, pr, owner } = meta;

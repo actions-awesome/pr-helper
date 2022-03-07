@@ -13,12 +13,15 @@ type ActionHandlers = {
   [key: string]: () => any
 }
 
-const createActionWithHook = (name: string, action: ActionHandlers[string]) => {
+const createActionWithHook = (
+  name: string,
+  handler: ActionHandlers[string]
+) => {
   return async () => {
     log(`action name: ${name} started`)
     // Not catching it is intended because we want the error to be thrown.
     try {
-      await action()
+      await handler()
     } catch (e) {
       log((e as Error).message)
     }
@@ -35,3 +38,6 @@ export const actions: ActionHandlers = {
   // [CREATE_COMMENT]: () => {},
   [GREETING]: createActionWithHook(GREETING, greetings),
 }
+
+console.log(actions)
+console.log(createActionWithHook(ADD_REVIEWERS, addReviewers))

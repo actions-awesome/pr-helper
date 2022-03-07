@@ -86388,12 +86388,12 @@ const greetings = () => __awaiter$1(void 0, void 0, void 0, function* () {
     log(`Greeting set to: ${greetings}`);
 });
 
-const createActionWithHook = (name, action) => {
+const createActionWithHook = (name, handler) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
         // Not catching it is intended because we want the error to be thrown.
         try {
-            yield action();
+            yield handler();
         }
         catch (e) {
             log(e.message);
@@ -86409,6 +86409,8 @@ const actions = {
     // [CREATE_COMMENT]: () => {},
     [GREETING]: createActionWithHook(GREETING, greetings),
 };
+console.log(actions);
+console.log(createActionWithHook(ADD_REVIEWERS, addReviewers));
 
 log('Started');
 const action = core.getInput(ACTIONS, { required: true });

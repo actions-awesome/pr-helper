@@ -1576,6 +1576,7 @@ const CREATE_COMMENT = 'create-comment';
 const PR_NUMBER = 'pr-number';
 // Variable constants
 const ASSIGNEES = 'assignees';
+const REVIEWERS = 'reviewers';
 const ACTIONS = 'actions';
 const DELIMITER = 'delimiter';
 const REPO = 'repo';
@@ -86324,6 +86325,21 @@ const addAssignees = () => __awaiter$1(void 0, void 0, void 0, function* () {
     log(`Assignees set to: ${rawAssignees}`);
 });
 
+const addReviewers = () => __awaiter$1(void 0, void 0, void 0, function* () {
+    const rawReviewers = core.getInput(REVIEWERS);
+    log(`Reviewers string: ${rawReviewers}`);
+    const reviewers = toList(rawReviewers);
+    assertListNotEmpty('Reviewers', reviewers);
+    const { repo, pr, owner } = meta;
+    yield client.pulls.requestReviewers({
+        repo,
+        owner,
+        pull_number: pr,
+        reviewers,
+    });
+    log(`Reviewers set to: ${rawReviewers}`);
+});
+
 const createActionWithHook = (name, action) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
@@ -86336,7 +86352,7 @@ const createActionWithHook = (name, action) => {
 const actions = {
     [ADD_ASSIGNEES]: createActionWithHook(ADD_REVIEWERS, addAssignees),
     [ADD_LABELS]: () => { },
-    [ADD_REVIEWERS]: () => { },
+    [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
     [CREATE_COMMENT]: () => { },
 };
 

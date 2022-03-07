@@ -86392,7 +86392,12 @@ const createActionWithHook = (name, action) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
         // Not catching it is intended because we want the error to be thrown.
-        yield action();
+        try {
+            yield action();
+        }
+        catch (e) {
+            log(e.message);
+        }
         log(`action name: ${name} dispatched successfully`);
         core.setOutput(name, true);
     });
@@ -86431,6 +86436,8 @@ function main() {
 function dispatchAction(name) {
     return __awaiter$1(this, void 0, void 0, function* () {
         const actionHandler = actions[name];
+        log(name);
+        console.log(actionHandler);
         if (!actionHandler) {
             createHelperError(`Action name: ${name} is not supported,
   please refer to the documentation.`);

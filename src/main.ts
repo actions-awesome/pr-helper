@@ -33,6 +33,8 @@ async function main() {
 
 async function dispatchAction(name: string) {
   const actionHandler = actions[name]
+  log(name)
+  console.log(actionHandler)
   if (!actionHandler) {
     createHelperError(`Action name: ${name} is not supported,
   please refer to the documentation.`)

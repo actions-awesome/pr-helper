@@ -31,7 +31,9 @@ async function main() {
 
 async function dispatchAction(name: string) {
   const actionHandler = actions[name]
-  if (actionHandler) return actionHandler()
-  createHelperError(`Action name: ${name} is not supported,
-please refer to the documentation.`)
+  if (!actionHandler) {
+    createHelperError(`Action name: ${name} is not supported,
+  please refer to the documentation.`)
+  }
+  return actionHandler()
 }

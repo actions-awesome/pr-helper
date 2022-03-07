@@ -1570,9 +1570,7 @@ exports.getIDToken = getIDToken;
 
 // Action constants
 const ADD_ASSIGNEES = 'add-assignees';
-const ADD_LABELS = 'add-labels';
 const ADD_REVIEWERS = 'add-reviewers';
-const CREATE_COMMENT = 'create-comment';
 const GREETING = 'greeting';
 const PR_NUMBER = 'pr-number';
 // Variable constants
@@ -86399,10 +86397,10 @@ const createActionWithHook = (name, action) => {
     });
 };
 const actions = {
-    [ADD_ASSIGNEES]: createActionWithHook(ADD_REVIEWERS, addAssignees),
-    [ADD_LABELS]: () => { },
+    [ADD_ASSIGNEES]: createActionWithHook(ADD_ASSIGNEES, addAssignees),
+    // [ADD_LABELS]: () => {},
     [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
-    [CREATE_COMMENT]: () => { },
+    // [CREATE_COMMENT]: () => {},
     [GREETING]: createActionWithHook(GREETING, greetings),
 };
 
@@ -86431,9 +86429,10 @@ function main() {
 function dispatchAction(name) {
     return __awaiter$1(this, void 0, void 0, function* () {
         const actionHandler = actions[name];
-        if (actionHandler)
-            return actionHandler();
-        createHelperError(`Action name: ${name} is not supported,
-please refer to the documentation.`);
+        if (!actionHandler) {
+            createHelperError(`Action name: ${name} is not supported,
+  please refer to the documentation.`);
+        }
+        return actionHandler();
     });
 }

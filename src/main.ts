@@ -8,7 +8,7 @@ log('Started')
 
 const action = getInput(ACTIONS, { required: true })
 
-const actionList = action.split(delimiter).map(String.prototype.trim)
+const actionList = action.split(delimiter).map((v) => v.trim())
 
 log('actions to be executed: ', actionList)
 

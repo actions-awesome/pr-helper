@@ -29,7 +29,7 @@ const createActionWithHook = (
 
 export const actions: ActionHandlers = {
   [ADD_ASSIGNEES]: createActionWithHook(ADD_ASSIGNEES, addAssignees),
-  [ADD_LABELS]: () => createActionWithHook(ADD_LABELS, addLabels),
+  [ADD_LABELS]: createActionWithHook(ADD_LABELS, addLabels),
   [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
   // [CREATE_COMMENT]: () => {},
   [GREETING]: createActionWithHook(GREETING, greetings),

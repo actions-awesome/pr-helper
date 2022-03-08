@@ -20,6 +20,8 @@ inputs:
     description: 'Comment body to post'
   labels:
     description: 'Labels to add, default separated by comma'
+  label-only-if:
+    description: 'Add labels only when its true'
   reviewers:
     description: 'Reviewers id to add, default separated by comma'
   assignees:

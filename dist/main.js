@@ -1570,6 +1570,7 @@ exports.getIDToken = getIDToken;
 
 // Action constants
 const ADD_ASSIGNEES = 'add-assignees';
+const ADD_LABELS = 'add-labels';
 const ADD_REVIEWERS = 'add-reviewers';
 const GREETING = 'greeting';
 const PR_NUMBER = 'pr-number';
@@ -1580,6 +1581,8 @@ const ACTIONS = 'actions';
 const DELIMITER = 'delimiter';
 const GREETING_MSG = 'greeting-message';
 const GREETING_GUIDELINE_ADDRESS = 'greeting-guideline-address';
+const LABELS = 'labels';
+const LABEL_ONLY_IF = 'label-only-if';
 const REPO = 'repo';
 
 const defaultDelimiter = ',';
@@ -86327,6 +86330,34 @@ const addAssignees = () => __awaiter$1(void 0, void 0, void 0, function* () {
     log(`Assignees set to: ${rawAssignees}`);
 });
 
+var context = github.context;
+
+const addLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
+    const rawLabels = core.getInput(LABELS);
+    const rawShouldLabel = core.getInput(LABEL_ONLY_IF);
+    log(`rawLabels: ${rawLabels}`);
+    // when label condition is presented, we check the condition's value
+    // If not true then we simply terminates it
+    if (rawShouldLabel !== '' && rawShouldLabel !== 'true') {
+        log(`Labels not set because of label-only-if was set and not true`);
+        return;
+    }
+    const labels = toList(rawLabels);
+    const { repo: { repo, owner }, issue: { number: issue_number, } } = context;
+    try {
+        yield client.issues.addLabels({
+            labels,
+            owner,
+            issue_number,
+            repo,
+        });
+        log(`Labels: ${labels} set successfully`);
+    }
+    catch (e) {
+        log(e.message);
+    }
+});
+
 const addReviewers = () => __awaiter$1(void 0, void 0, void 0, function* () {
     const rawReviewers = core.getInput(REVIEWERS);
     log(`Reviewers string: ${rawReviewers}`);
@@ -86341,8 +86372,6 @@ const addReviewers = () => __awaiter$1(void 0, void 0, void 0, function* () {
     });
     log(`Reviewers set to: ${rawReviewers}`);
 });
-
-var context = github.context;
 
 /**
  * Greetings to user who opens an issue or a PR.
@@ -86399,7 +86428,7 @@ const createActionWithHook = (name, handler) => {
 };
 const actions = {
     [ADD_ASSIGNEES]: createActionWithHook(ADD_ASSIGNEES, addAssignees),
-    // [ADD_LABELS]: () => {},
+    [ADD_LABELS]: () => createActionWithHook(ADD_LABELS, addLabels),
     [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
     // [CREATE_COMMENT]: () => {},
     [GREETING]: createActionWithHook(GREETING, greetings),

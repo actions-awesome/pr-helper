@@ -1573,6 +1573,7 @@ const ADD_ASSIGNEES = 'add-assignees';
 const ADD_LABELS = 'add-labels';
 const ADD_REVIEWERS = 'add-reviewers';
 const GREETING = 'greeting';
+const REMOVE_LABELS = 'remove-labels';
 const PR_NUMBER = 'pr-number';
 // Variable constants
 const ASSIGNEES = 'assignees';
@@ -86417,6 +86418,34 @@ const greetings = () => __awaiter$1(void 0, void 0, void 0, function* () {
     log(`Greeting set to: ${greetings}`);
 });
 
+const removeLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
+    const rawLabels = core.getInput(LABELS);
+    const rawShouldLabel = core.getInput(LABEL_ONLY_IF);
+    log(`rawLabels: ${rawLabels}`);
+    // when label condition is presented, we check the condition's value
+    // If not true then we simply terminates it
+    if (rawShouldLabel !== '' && rawShouldLabel !== 'true') {
+        log(`Labels not set because of label-only-if was set and not true`);
+        return;
+    }
+    const labels = toList(rawLabels);
+    const { repo: { repo, owner }, issue: { number: issue_number }, } = context;
+    try {
+        yield Promise.all(labels.map((name) => __awaiter$1(void 0, void 0, void 0, function* () {
+            yield client.issues.removeLabel({
+                name,
+                owner,
+                issue_number,
+                repo,
+            });
+            log(`Labels: ${labels} removed successfully`);
+        })));
+    }
+    catch (e) {
+        log(e.message);
+    }
+});
+
 const createActionWithHook = (name, handler) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
@@ -86430,6 +86459,7 @@ const actions = {
     [ADD_ASSIGNEES]: createActionWithHook(ADD_ASSIGNEES, addAssignees),
     [ADD_LABELS]: createActionWithHook(ADD_LABELS, addLabels),
     [ADD_REVIEWERS]: createActionWithHook(ADD_REVIEWERS, addReviewers),
+    [REMOVE_LABELS]: createActionWithHook(REMOVE_LABELS, removeLabels),
     // [CREATE_COMMENT]: () => {},
     [GREETING]: createActionWithHook(GREETING, greetings),
 };

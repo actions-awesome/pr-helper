@@ -1,10 +1,10 @@
 import { getInput } from '@actions/core'
-import { LABELS, LABEL_ONLY_IF } from "../constants"
+import { LABELS, LABEL_ONLY_IF, LABELS_TO_ADD } from "../constants"
 import { log, toList } from '../utils'
 import client from "./client"
 import context from './context'
 export const addLabels = async () => {
-  const rawLabels = getInput(LABELS)
+  const rawLabels = getInput(LABELS) || getInput(LABELS_TO_ADD)
   const rawShouldLabel = getInput(LABEL_ONLY_IF)
   log(`rawLabels: ${rawLabels}`)
   // when label condition is presented, we check the condition's value

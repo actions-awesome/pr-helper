@@ -1582,6 +1582,8 @@ const ACTIONS = 'actions';
 const DELIMITER = 'delimiter';
 const GREETING_MSG = 'greeting-message';
 const GREETING_GUIDELINE_ADDRESS = 'greeting-guideline-address';
+const LABELS_TO_ADD = 'labels-to-add';
+const LABELS_TO_REMOVE = 'labels-to-remove';
 const LABELS = 'labels';
 const LABEL_ONLY_IF = 'label-only-if';
 const REPO = 'repo';
@@ -86334,7 +86336,7 @@ const addAssignees = () => __awaiter$1(void 0, void 0, void 0, function* () {
 var context = github.context;
 
 const addLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
-    const rawLabels = core.getInput(LABELS);
+    const rawLabels = core.getInput(LABELS) || core.getInput(LABELS_TO_ADD);
     const rawShouldLabel = core.getInput(LABEL_ONLY_IF);
     log(`rawLabels: ${rawLabels}`);
     // when label condition is presented, we check the condition's value
@@ -86419,7 +86421,7 @@ const greetings = () => __awaiter$1(void 0, void 0, void 0, function* () {
 });
 
 const removeLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
-    const rawLabels = core.getInput(LABELS);
+    const rawLabels = core.getInput(LABELS) || core.getInput(LABELS_TO_REMOVE);
     const rawShouldLabel = core.getInput(LABEL_ONLY_IF);
     log(`rawLabels: ${rawLabels}`);
     // when label condition is presented, we check the condition's value

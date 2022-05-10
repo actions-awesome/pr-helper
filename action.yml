@@ -20,6 +20,10 @@ inputs:
     description: 'Comment body to post'
   labels:
     description: 'Labels to add, default separated by comma'
+  labels-to-add:
+    description: 'Used when combined remove and add labels actions together'
+  labels-to-remove:
+    description: 'Used when combined remove and add labels actions together'
   label-only-if:
     description: 'Add labels only when its true'
   reviewers:

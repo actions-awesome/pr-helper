@@ -6,6 +6,7 @@ export const CREATE_COMMENT = 'create-comment'
 export const GREETING = 'greeting'
 export const REMOVE_LABELS = 'remove-labels'
 export const PR_NUMBER = 'pr-number'
+export const MAINTAIN_COMMENT = 'maintain-comment'
 
 // Variable constants
 export const ASSIGNEES = 'assignees'
@@ -19,3 +20,5 @@ export const LABELS_TO_REMOVE = 'labels-to-remove'
 export const LABELS = 'labels'
 export const LABEL_ONLY_IF = 'label-only-if'
 export const REPO = 'repo'
+export const COMMENT_BODY = 'comment-body'
+export const BODY_FILTER = 'body-filter'

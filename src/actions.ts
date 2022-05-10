@@ -6,6 +6,7 @@ import {
   ADD_REVIEWERS,
   REMOVE_LABELS,
   GREETING,
+  MAINTAIN_COMMENT,
 } from './constants'
 import {
   addAssignees,
@@ -13,6 +14,7 @@ import {
   addLabels,
   greetings,
   removeLabels,
+  maintainComment,
 } from './actions/index'
 
 type ActionHandlers = {
@@ -40,4 +42,5 @@ export const actions: ActionHandlers = {
   [REMOVE_LABELS]: createActionWithHook(REMOVE_LABELS, removeLabels),
   // [CREATE_COMMENT]: () => {},
   [GREETING]: createActionWithHook(GREETING, greetings),
+  [MAINTAIN_COMMENT]: createActionWithHook(MAINTAIN_COMMENT, maintainComment),
 }

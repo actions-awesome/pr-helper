@@ -1575,6 +1575,7 @@ const ADD_REVIEWERS = 'add-reviewers';
 const GREETING = 'greeting';
 const REMOVE_LABELS = 'remove-labels';
 const PR_NUMBER = 'pr-number';
+const MAINTAIN_COMMENT = 'maintain-comment';
 // Variable constants
 const ASSIGNEES = 'assignees';
 const REVIEWERS = 'reviewers';
@@ -1587,6 +1588,8 @@ const LABELS_TO_REMOVE = 'labels-to-remove';
 const LABELS = 'labels';
 const LABEL_ONLY_IF = 'label-only-if';
 const REPO = 'repo';
+const COMMENT_BODY = 'comment-body';
+const BODY_FILTER = 'body-filter';
 
 const defaultDelimiter = ',';
 var delimiter = core.getInput(DELIMITER) || defaultDelimiter;
@@ -86448,6 +86451,84 @@ const removeLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
     }
 });
 
+function maintainComment() {
+    return __awaiter$1(this, void 0, void 0, function* () {
+        try {
+            const body = core.getInput(COMMENT_BODY);
+            const { repo, owner } = meta;
+            const bodyFilter = core.getInput(BODY_FILTER);
+            const { number } = context.issue;
+            function listComments(page = 1) {
+                return __awaiter$1(this, void 0, void 0, function* () {
+                    let { data: comments } = yield client.issues.listComments({
+                        owner,
+                        repo,
+                        issue_number: number,
+                        per_page: 100,
+                        page,
+                    });
+                    if (comments.length >= 100) {
+                        comments = comments.concat(yield listComments(page + 1));
+                    }
+                    return comments;
+                });
+            }
+            const commentList = yield listComments();
+            let comments = [];
+            commentList.forEach((item) => {
+                var _a, _b;
+                const target = bodyFilter ? (_a = item.body) === null || _a === void 0 ? void 0 : _a.includes(bodyFilter) : true;
+                if (target) {
+                    comments.push({
+                        id: item.id,
+                        auth: (_b = item.user) === null || _b === void 0 ? void 0 : _b.login,
+                        body: item.body,
+                    });
+                }
+            });
+            log(`comments: ${JSON.stringify(comments)}`);
+            log(`comments-length: ${comments.length}`);
+            if (comments.length === 0 && body) {
+                const { data } = yield client.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: number,
+                    body,
+                });
+                core.setOutput('comment-id', data.id);
+            }
+            else if (comments.length === 1) {
+                let commentId = comments[0].id;
+                if (!body) {
+                    yield client.issues.deleteComment({
+                        owner,
+                        repo,
+                        comment_id: commentId,
+                    });
+                    log(`Actions: [delete-comment][${commentId}] success!`);
+                    return false;
+                }
+                let params = {
+                    owner,
+                    repo,
+                    comment_id: commentId,
+                    body,
+                };
+                yield client.issues.updateComment(params);
+                core.setOutput('comment-id', commentId);
+                log(`Actions: [update-comment][${params.body}] success!`);
+            }
+            else {
+                let length = comments.length;
+                log(`The comments length is ${length}.`);
+            }
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
+}
+
 const createActionWithHook = (name, handler) => {
     return () => __awaiter$1(void 0, void 0, void 0, function* () {
         log(`action name: ${name} started`);
@@ -86464,6 +86545,7 @@ const actions = {
     [REMOVE_LABELS]: createActionWithHook(REMOVE_LABELS, removeLabels),
     // [CREATE_COMMENT]: () => {},
     [GREETING]: createActionWithHook(GREETING, greetings),
+    [MAINTAIN_COMMENT]: createActionWithHook(MAINTAIN_COMMENT, maintainComment),
 };
 
 log('Started');

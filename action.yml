@@ -34,6 +34,10 @@ inputs:
     description: 'Suggested reviewers id to add, default separated by comma'
   delimiter:
     description: 'The delimiter to split the all multi valued inputs'
+  comment-body:
+    description: 'Comment body to post'
+  body-filter:
+    description: 'Signature text for filtering the comment trying to maintain'
 runs:
   using: node12
   main: 'dist/main.js'

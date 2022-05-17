@@ -5,7 +5,7 @@ import context from './context'
 import client from './client'
 import meta from '../meta'
 import { log } from '../utils'
-import { BODY_FILTER, COMMENT_BODY } from '../constants'
+import { BODY_FILTER, COMMENT_BODY, PR_NUMBER } from '../constants'
 
 export async function maintainComment() {
   try {
@@ -16,7 +16,7 @@ export async function maintainComment() {
 
     const bodyFilter = getInput(BODY_FILTER)
 
-    const { number } = context.issue
+    const number = Number(getInput(PR_NUMBER)) || context.issue.number
 
     async function listComments(page = 1) {
       let { data: comments } = await client.issues.listComments({

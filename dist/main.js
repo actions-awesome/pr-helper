@@ -86349,7 +86349,8 @@ const addLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
         return;
     }
     const labels = toList(rawLabels);
-    const { repo: { repo, owner }, issue: { number: issue_number, } } = context;
+    const { repo: { repo, owner } } = context;
+    const issue_number = Number(core.getInput(PR_NUMBER)) || context.issue.number;
     try {
         yield client.issues.addLabels({
             labels,
@@ -86434,7 +86435,8 @@ const removeLabels = () => __awaiter$1(void 0, void 0, void 0, function* () {
         return;
     }
     const labels = toList(rawLabels);
-    const { repo: { repo, owner }, issue: { number: issue_number }, } = context;
+    const { repo: { repo, owner }, } = context;
+    const issue_number = Number(core.getInput(PR_NUMBER)) || context.issue.number;
     try {
         yield Promise.all(labels.map((name) => __awaiter$1(void 0, void 0, void 0, function* () {
             yield client.issues.removeLabel({
@@ -86457,7 +86459,7 @@ function maintainComment() {
             const body = core.getInput(COMMENT_BODY);
             const { repo, owner } = meta;
             const bodyFilter = core.getInput(BODY_FILTER);
-            const { number } = context.issue;
+            const number = Number(core.getInput(PR_NUMBER)) || context.issue.number;
             function listComments(page = 1) {
                 return __awaiter$1(this, void 0, void 0, function* () {
                     let { data: comments } = yield client.issues.listComments({

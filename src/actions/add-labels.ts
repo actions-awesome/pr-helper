@@ -1,5 +1,5 @@
 import { getInput } from '@actions/core'
-import { LABELS, LABEL_ONLY_IF, LABELS_TO_ADD } from "../constants"
+import { LABELS, LABEL_ONLY_IF, LABELS_TO_ADD, PR_NUMBER } from "../constants"
 import { log, toList } from '../utils'
 import client from "./client"
 import context from './context'
@@ -16,7 +16,9 @@ export const addLabels = async () => {
 
   const labels = toList(rawLabels)
 
-  const { repo: { repo, owner }, issue: { number: issue_number, }} = context
+  const { repo: { repo, owner } } = context
+
+  const issue_number = Number(getInput(PR_NUMBER)) || context.issue.number
 
   try {
     await client.issues.addLabels({

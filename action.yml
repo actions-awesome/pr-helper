@@ -13,7 +13,7 @@ inputs:
     default: ${{ github.token }}
   pr-number:
     description: 'The number of PR to be operated on'
-    default: ${{ github.event.number}}
+    default: ${{ github.event.number }}
   repo:
     description: 'Repository name'
   body:
